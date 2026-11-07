@@ -1,0 +1,40 @@
+name: Docker Smoke Test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Prepare environment variables
+        run: cp .env.example .env
+
+      - name: Start Mongo and API containers
+        run: docker compose up --build -d --wait mongo api
+
+      - name: Run database seed
+        run: docker compose run --rm seed
+
+      - name: Run smoke test
+        run: |
+          set -a; . ./.env; set +a
+          node scripts/smoke.mjs
+
+      - name: Dump docker compose logs on failure
+        if: failure()
+        run: docker compose logs --no-color
+
+      - name: Teardown docker containers
+        if: always()
+        run: docker compose down -v
+
