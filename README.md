@@ -1,4 +1,4 @@
-# Production-Grade E-Commerce REST API
+# E-Commerce REST API
 
 A production-grade E-Commerce REST API built with Node.js, Express, TypeScript, and MongoDB. Engineered with strict layered architecture (`Route -> Validate -> Controller -> Service -> Model`), concurrency-safe atomic inventory reservation (`findOneAndUpdate`), hierarchical multi-level categories via materialized path with atomic subtree relocation, and role-based access control (RBAC).
 
